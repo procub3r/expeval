@@ -1,5 +1,6 @@
 operators = ['**', ['*', '/', '//', '%'], ['+', '-']]
 
+#this is to check for the arithmetic operators, further below in the hierarchy.
 def eval(expr):
     print('[expr]:', expr)
     sp = expr.find('(')
