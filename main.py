@@ -112,4 +112,4 @@ def eval_expr(expr):
     print('[final result]:', resolve_parens(expr))
 
 # Call eval_expr() with an expression to test this!
-eval_expr('2 * (1 + 3) / 4 + 6 ** (3 / 1.5) / 12 + 10 - 15 % 10')
+eval_expr('(2 * (1 + 3) / 4 + 6 ** (3 / 1.5) / 12 + 10 - 15 % 10')
