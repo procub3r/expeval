@@ -20,6 +20,9 @@ def find_matching_paren(expr, s):
     print('[error]: mismatching parens.')
 
 def resolve_op(expr):
+    # TODO:
+    # 1. Recursively resolve all operators just like parens.
+    # 2. Consider more than just one character around the operator.
     for i in range(0, len(expr)):
         if expr[i] in operators:
             result = op_func[expr[i]](expr[i-1], expr[i+1])
@@ -40,4 +43,4 @@ def eval_expr(expr):
     expr = ''.join(expr.split())
     print(resolve_parens(expr))
 
-eval_expr('(1 + (2 + 3)) + (4 + (5 + 6)) + 7')
+eval_expr('(1 + (2 + 3)) + ((4 + 5) + 6) + 7')
