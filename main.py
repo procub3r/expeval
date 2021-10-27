@@ -1,10 +1,33 @@
-operators = '*+'
+# These are the only operators supported atm.
+operators = [['**'], ['*', '/', '%'], ['+', '-']]
 
-def add_func(a, b):
-    return str(int(a) + int(b))
+def exp_func(expr, ops):
+    return str(float(expr[ops[0][0]:ops[0][1]]) ** float(expr[ops[1][0]:ops[1][1]]))
+
+def mult_func(expr, ops):
+    return str(float(expr[ops[0][0]:ops[0][1]]) * float(expr[ops[1][0]:ops[1][1]]))
+
+def div_func(expr, ops):
+    return str(float(expr[ops[0][0]:ops[0][1]]) / float(expr[ops[1][0]:ops[1][1]]))
+
+def mod_func(expr, ops):
+    return str(float(expr[ops[0][0]:ops[0][1]]) % float(expr[ops[1][0]:ops[1][1]]))
+
+def add_func(expr, ops):
+    return str(float(expr[ops[0][0]:ops[0][1]]) + float(expr[ops[1][0]:ops[1][1]]))
+
+def sub_func(expr, ops):
+    return str(float(expr[ops[0][0]:ops[0][1]]) - float(expr[ops[1][0]:ops[1][1]]))
 
 op_func = {
-    '+': add_func
+    '**': exp_func,
+
+    '*': mult_func,
+    '/': div_func,
+    '%': mod_func,
+
+    '+': add_func,
+    '-': sub_func,
 }
 
 def find_matching_paren(expr, s):
@@ -19,14 +42,30 @@ def find_matching_paren(expr, s):
                 return i
     print('[error]: mismatching parens.')
 
+def get_ops(expr, op_indx, op_len):
+    lops = 0
+    for i in range(op_indx - 1, -1, -1):
+        if not (expr[i].isdigit() or (expr[i] == '.')):
+            lops = i + 1
+            break
+    lope = op_indx
+    rops = op_indx + op_len
+    rope = len(expr)
+    for i in range(rops, len(expr)):
+        if not (expr[i].isdigit() or (expr[i] == '.')):
+            rope = i
+            break
+    return ((lops, lope), (rops, rope))
+
 def resolve_op(expr):
-    # TODO:
-    # 1. Recursively resolve all operators just like parens.
-    # 2. Consider more than just one character around the operator.
-    for i in range(0, len(expr)):
-        if expr[i] in operators:
-            result = op_func[expr[i]](expr[i-1], expr[i+1])
-            return result
+    for op_list in operators:
+        for op in op_list:
+            while (op_indx := expr.find(op)) != -1:
+                # ops = operands on either side of the operator.
+                ops = get_ops(expr, op_indx, len(op))
+                result = op_func[op](expr, ops)
+                expr = expr[:ops[0][0]] + result + expr[ops[1][1]:]
+    return expr
 
 def resolve_parens(expr):
     print('[expr]:', expr)
@@ -41,6 +80,6 @@ def resolve_parens(expr):
 
 def eval_expr(expr):
     expr = ''.join(expr.split())
-    print(resolve_parens(expr))
+    print('[final result]:', resolve_parens(expr))
 
-eval_expr('(1 + (2 + 3)) + ((4 + 5) + 6) + 7')
+# Call eval_expr() with an expression to test this!
